@@ -1,0 +1,17 @@
+{
+  "name": "wlw-map",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "web-dev-server --node-resolve --open --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "leaflet": "1.9.3"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.1.35"
+  }
+}

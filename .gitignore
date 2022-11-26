@@ -1,0 +1,9 @@
+*.pyc
+node_modules/
+.vscode/
+.env/
+*.geojson
+geojson/
+*.db
+shapes/
+*.zip

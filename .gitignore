@@ -4,6 +4,7 @@ node_modules/
 .env/
 *.geojson
 geojson/
+map/geojson
 *.db
 shapes/
 *.zip

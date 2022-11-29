@@ -8,15 +8,16 @@ Contributed as part of [DINAcon HACKnights 2022](https://hacknight.dinacon.ch/ev
 
 ```sh
 make setup
-cd exporter
-./run.sh
-cd ../map
-npm start
+make run-exporter
+make run-map
 ```
 
-## Run on k8s
+## Run with docker/podman
 
 ```sh
+make setup
 make images
-# TODO
+make run-exporter-container
+make run-map-container
+# open http://localhost:8080
 ```

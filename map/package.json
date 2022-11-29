@@ -1,5 +1,5 @@
 {
-  "name": "wlw-map",
+  "name": "wlw-partner-map",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -7,11 +7,11 @@
     "start": "web-dev-server --node-resolve --open --watch"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "leaflet": "1.9.3"
   },
   "devDependencies": {
-    "@web/dev-server": "^0.1.35"
+    "@web/dev-server": "0.1.35"
   }
 }

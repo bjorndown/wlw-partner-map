@@ -1,4 +1,4 @@
-FROM nodejs:18-alpine as build
+FROM node:18-alpine as build
 
 WORKDIR /opt/wlw-partner-map
 
@@ -10,4 +10,4 @@ FROM nginx:alpine
 
 COPY --from=build /opt/wlw-partner-map /usr/share/nginx/html
 
-VOLUME ./usr/share/nginx/html/geojson
+VOLUME ./geojson

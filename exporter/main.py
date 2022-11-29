@@ -30,7 +30,7 @@ con = sqlite3.connect('db/partners.db')
 
 @dataclass
 class Partner:
-    zip_code: int
+    UUID: int
     status: str
     url: str
     comment: str
@@ -39,7 +39,7 @@ class Partner:
 def find_partner(zip_code: int) -> Union[Partner, None]:
     with con:
         cursor = con.execute(
-            "SELECT zip_code, status, url, comment FROM partners WHERE zip_code = ?",
+            "SELECT UUID, status, url, comment FROM partners WHERE UUID = ?",
             (zip_code, ))
 
         result = cursor.fetchone()
@@ -48,6 +48,7 @@ def find_partner(zip_code: int) -> Union[Partner, None]:
 
 
 def simplify(points: List[tuple[float, float]]) -> List[tuple[float, float]]:
+    '''Reduce number of points in polygon using https://shapely.readthedocs.io/en/stable/manual.html?highlight=simplify#object.simplify'''
     return [
         p for p in Polygon(np.array(points)).simplify(
             0.0025, preserve_topology=True).exterior.coords
@@ -55,7 +56,16 @@ def simplify(points: List[tuple[float, float]]) -> List[tuple[float, float]]:
 
 
 def transform(points: List[tuple[float, float]]) -> List[tuple[float, float]]:
+    '''Convert coordinates from LV95 to WGS84 using https://pyproj4.github.io/pyproj/dev/examples.html#step-2-create-transformer-to-convert-from-crs-to-crs'''
     return [transformer.transform(x, y) for x, y in points]
+
+
+def get_geojson(shapeRecord: shapefile.ShapeRecords):
+    geojson = shapeRecord.__geo_interface__
+    del geojson['properties']['UUID']  # reduce file size ~0.1MB
+    new_coords = simplify(transform(geojson['geometry']['coordinates'][0]))
+    geojson['geometry']['coordinates'][0] = new_coords
+    return geojson
 
 
 logger.info("reading shapes")
@@ -74,17 +84,14 @@ logger.info("reading shapes")
 sf = shapefile.Reader(
     'shapes/SHAPEFILE_LV95_LN02/swissBOUNDARIES3D_1_3_TLM_HOHEITSGEBIET')
 
-fields = ('NAME', 'BFS_NUMMER')
+fields = ('UUID', 'NAME')
 collection = {'type': 'FeatureCollection', 'features': []}
 
 logger.info("transform and merge")
 
-for shape in sf.shapeRecords(fields=fields):
-    geojson = shape.__geo_interface__
-    new_coords = simplify(transform(geojson['geometry']['coordinates'][0]))
-    geojson['geometry']['coordinates'][0] = new_coords
-
-    partner = find_partner(geojson['properties']['BFS_NUMMER'])
+for shapeRecord in sf.shapeRecords(fields=fields):
+    geojson = get_geojson(shapeRecord)
+    partner = find_partner(shapeRecord.record.UUID)
 
     if partner:
         geojson['properties']['status'] = partner.status

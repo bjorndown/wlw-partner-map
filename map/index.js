@@ -1,27 +1,28 @@
-import 'leaflet'
+const response = await fetch('/geojson/partners.geojson')
 
-const resp = await fetch('/geojson/partners.geojson')
-const data = await resp.json()
+if (!response.ok) {
+  document.querySelector('#error').textContent = 'Could not load GeoJSON data'
+}
+
+const data = await response.json()
 
 const merenschwandCenter = [47.25941, 8.37492]
 const initialZoomLevel = 10
 const map = L.map('map').setView(merenschwandCenter, initialZoomLevel)
 
 const renderPopup = layer => {
-  const { NAME, url, comment, BFS_NUMMER } = layer.feature.properties
-  return `${NAME} ${BFS_NUMMER}
+  const { NAME, url, comment } = layer.feature.properties
+  return `${NAME}
   ${url ? `<br/><a target="_blank" href="${url}">${url}</a>` : ''}
   ${comment ? `<br/>${comment}` : ''}`
 }
 
 const style = feature => {
-  const color =
-    feature.properties.status === 'P'
-      ? 'green'
-      : feature.properties.status === 'I'
-      ? 'red'
-      : '#BBB'
-  return { color }
+  const { status } = feature.properties
+  const color = status === 'P' ? 'green' : status === 'I' ? 'red' : '#BBB'
+
+  const opacity = status === 'P' ? 1 : 0.5
+  return { color, opacity }
 }
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

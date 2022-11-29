@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y curl unzip
 WORKDIR /opt/wlw-geojson-exporter
 
 VOLUME ./geojson
+VOLUME ./db
 
 ADD . .
 

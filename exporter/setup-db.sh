@@ -3,7 +3,7 @@ mkdir -p db
 
 if [ ! -f db/partners.db ]; then
   sqlite3 db/partners.db 'CREATE TABLE "partners" (
-    "UUID"	TEXT NOT NULL,
+    "id"	TEXT NOT NULL,
     "zip_code"	INTEGER NOT NULL,
     "status"	TEXT CHECK("status" IN (NULL, "P", "K", "I")),
     "url"	TEXT,
@@ -13,7 +13,7 @@ if [ ! -f db/partners.db ]; then
     "municipality"	TEXT NOT NULL,
     "partnership_started_at"	TEXT,
     "partnership_cancelled_at"	TEXT,
-    "updated_at"	INTEGER,
+    "updated_at"	TEXT,
     PRIMARY KEY("UUID")
   )'
 fi;

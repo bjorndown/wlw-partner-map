@@ -13,4 +13,4 @@ RUN ./get-shapes.sh
 
 RUN pip install virtualenv && ./setup-venv.sh
   
-CMD ["./run.sh"]
+ENTRYPOINT [".venv/bin/python", "main.py"]

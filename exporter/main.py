@@ -13,8 +13,12 @@ from shapely.geometry import Polygon
 parser = argparse.ArgumentParser()
 parser.add_argument('-o',
                     '--outfile',
-                    required=True,
-                    help="where to write GeoJSON data")
+                    help="where to write GeoJSON data",
+                    default='./geojson/partners.geojson')
+parser.add_argument('-d',
+                    '--database',
+                    help="path to partners database",
+                    default='./db/partners.db')
 args = parser.parse_args()
 
 ESPG_LV95 = 'EPSG:2056'
@@ -25,26 +29,24 @@ logger = logging.getLogger('partner-geojson-exporter')
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
-con = sqlite3.connect('db/partners.db')
+con = sqlite3.connect(args.database)
 
 
 @dataclass
 class Partner:
-    UUID: int
     status: str
     url: str
     comment: str
 
 
-def find_partner(zip_code: int) -> Union[Partner, None]:
+def find_partner(uuid: int) -> Union[Partner, None]:
     with con:
         cursor = con.execute(
-            "SELECT UUID, status, url, comment FROM partners WHERE UUID = ?",
-            (zip_code, ))
+            "SELECT status, url, comment FROM partners WHERE id = ?", (uuid, ))
 
         result = cursor.fetchone()
         if result:
-            return Partner(result[0], result[1], result[2], result[3])
+            return Partner(result[0], result[1], result[2])
 
 
 def simplify(points: List[tuple[float, float]]) -> List[tuple[float, float]]:

@@ -1,7 +1,10 @@
+clean:
+	rm -rf ../exporter/db/
+
 setup-map:
 	cd map && \
 	npm install && \
-	ln -s ../exporter/geojson .
+	ln -sf ../exporter/geojson .
 
 setup-exporter:
 	cd exporter && \

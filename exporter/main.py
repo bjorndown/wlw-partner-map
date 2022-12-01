@@ -42,7 +42,7 @@ class Partner:
 def find_partner(uuid: int) -> Union[Partner, None]:
     with con:
         cursor = con.execute(
-            "SELECT status, url, comment FROM partners WHERE id = ?", (uuid, ))
+            "SELECT status, url, comment FROM partners WHERE uuid = ?", (uuid, ))
 
         result = cursor.fetchone()
         if result:

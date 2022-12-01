@@ -4,6 +4,10 @@ Automating updates to [wLw](https://wir-lernen-weiter.ch)'s [partner map](https:
 
 Contributed as part of [DINAcon HACKnights 2022](https://hacknight.dinacon.ch/event/8).
 
+## Requirements
+
+Install Python 3.9+, SQLite3 and Node.js/NPM 14+ before starting.
+
 ## Run locally
 
 ```sh

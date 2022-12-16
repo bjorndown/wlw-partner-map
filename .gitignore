@@ -8,3 +8,4 @@ map/geojson
 *.db
 shapes/
 *.zip
+.idea/

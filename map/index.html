@@ -7,24 +7,45 @@
       rel="stylesheet"
       href="node_modules/leaflet/dist/leaflet.css"
       integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-      crossorigin=""
+      crossorigin="anonymous"
     />
     <script
       src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
       integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-      crossorigin=""
+      crossorigin="anonymous"
     ></script>
+
+    <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"
+    />
+
+    <script type="module" src="index.js"></script>
+
     <style>
       #map {
         width: 100%;
         height: 100vh;
       }
+
       body {
         margin: 0;
         padding: 0;
       }
+
+      input,
+      .autocomplete-result {
+        font-size: larger;
+        background-color: white;
+      }
+
+      .autocomplete-input {
+        box-shadow: 0 1px 5px rgb(0 0 0 / 65%);
+        border-radius: 4px;
+        background-color: white;
+      }
     </style>
-    <script type="module" src="index.js"></script>
   </head>
   <body>
     <div id="error"></div>

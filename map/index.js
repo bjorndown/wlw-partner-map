@@ -1,17 +1,3 @@
-const statusToColor = {
-  P: 'green',
-  K: 'purple',
-  I: 'red',
-  undefined: '#BBB',
-}
-
-const statusToText = {
-  P: 'Partner',
-  K: 'Kreislaufpartner',
-  I: 'Kein Interesse',
-  undefined: 'Kein Partner',
-}
-
 const renderPopup = layer => {
   const { NAME, url, comment } = layer.feature.properties
   return `${NAME}
@@ -21,18 +7,17 @@ const renderPopup = layer => {
 
 const style = feature => {
   const status = feature.properties.status
-  const color = statusToColor[status]
-  const opacity = ['P', 'K'].includes(status) ? 1 : 0.5
-  return { color, opacity }
+  return { className: `partner-area ${status}` }
 }
 
 L.Control.SearchBox = L.Control.extend({
   onAdd() {
-    const container = L.DomUtil.create('div', 'autocomplete')
+    const container = L.DomUtil.create('div', 'autocomplete control')
     container.id = 'suggest'
     L.DomEvent.disableClickPropagation(container)
 
     const input = L.DomUtil.create('input', 'autocomplete-input', container)
+    input.placeholder = 'Gemeinde suchen'
     input.type = 'text'
 
     L.DomUtil.create('ul', 'autocomplete-result-list', container)
@@ -41,8 +26,36 @@ L.Control.SearchBox = L.Control.extend({
   },
 })
 
-L.control.SearchBox = function (data, opts) {
+L.control.searchBox = function (data, opts) {
   return new L.Control.SearchBox(data, opts)
+}
+
+L.Control.Legend = L.Control.extend({
+  _statusToText: {
+    P: 'Partner',
+    K: 'Kreislaufpartner',
+    I: 'Kein Interesse',
+    undefined: 'Kein Partner',
+  },
+  onAdd() {
+    const container = L.DomUtil.create('div', 'legend control')
+    L.DomEvent.disableClickPropagation(container)
+
+    const list = L.DomUtil.create('ul', '', container)
+
+    for (const status in this._statusToText) {
+      const item = L.DomUtil.create('li', '', list)
+      L.DomUtil.create('span', `partner-legend ${status}`, item)
+      const statusText = L.DomUtil.create('span', '', item)
+      statusText.textContent = this._statusToText[status]
+    }
+
+    return container
+  },
+})
+
+L.control.legend = function (opts) {
+  return new L.Control.Legend(opts)
 }
 
 const setupMap = data => {
@@ -59,8 +72,9 @@ const setupMap = data => {
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map)
   L.geoJSON(data, { style }).bindPopup(renderPopup).addTo(map)
-  L.control.zoom({ position: 'bottomleft' }).addTo(map)
-  L.control.SearchBox(data, { position: 'topright' }).addTo(map)
+  L.control.zoom({ position: 'topleft' }).addTo(map)
+  L.control.searchBox(data, { position: 'topright' }).addTo(map)
+  L.control.legend({ position: 'bottomleft' }).addTo(map)
   return map
 }
 
@@ -72,13 +86,16 @@ const setupAutoComplete = (map, data) => {
       }
 
       return data.features.filter(feature =>
-        feature.properties.NAME.toLowerCase().includes(searchString)
+        feature.properties.NAME.toLowerCase().includes(
+          searchString.toLowerCase()
+        )
       )
     },
     renderResult: (feature, props) =>
-      `<li ${props}>${feature.properties.NAME} (${
-        statusToText[feature.properties.status]
-      })</li>`,
+      `<li ${props}>
+    <span class="partner-legend ${feature.properties.status}"></span>
+    ${feature.properties.NAME}
+</li>`,
     getResultValue: feature => feature.properties.NAME,
     onSubmit: feature => {
       if (!feature) {

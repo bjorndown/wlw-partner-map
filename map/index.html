@@ -34,16 +34,75 @@
         padding: 0;
       }
 
-      input,
-      .autocomplete-result {
-        font-size: larger;
-        background-color: white;
+      .legend ul {
+        padding: 0.3rem 0.6rem;
+        margin: 0;
+        list-style: none;
       }
 
-      .autocomplete-input {
+      .partner-area.P {
+        fill: green;
+        stroke: green;
+      }
+
+      .partner-legend.P {
+        background-color: green;
+      }
+
+      .partner-area.K {
+        fill: purple;
+        stroke: purple;
+      }
+
+      .partner-legend.K {
+        background-color: purple;
+      }
+
+      .partner-area.I {
+        fill: red;
+        stroke: red;
+      }
+
+      .partner-legend.I {
+        background-color: red;
+      }
+
+      .partner-area.undefined {
+        fill: #bbb;
+        stroke: #bbb;
+        opacity: 0.5;
+      }
+
+      .partner-legend.undefined {
+        background-color: #bbb;
+      }
+
+      span.partner-legend {
+        margin: 6px 4px 9px 0;
+        display: inline-block;
+        height: 10px;
+        vertical-align: middle;
+        width: 10px;
+      }
+
+      .control {
+        font-size: large;
         box-shadow: 0 1px 5px rgb(0 0 0 / 65%);
         border-radius: 4px;
         background-color: white;
+      }
+
+      input,
+      .autocomplete-result {
+        background-color: white;
+        background-image: none;
+        padding: 0.3rem 0.6rem;
+      }
+
+      .autocomplete-input {
+        background-color: white;
+        padding: 0.5rem 0.6rem 0.4rem 48px;
+        border: none;
       }
     </style>
   </head>
